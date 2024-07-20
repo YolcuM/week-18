@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/todolist.css" />
+    <title>To Do List</title>
+</head>
+<body>
+    <h1>To Do List</h1>
+    <div class="container">
+        <div class="todo_new">
+            <input class="field" id="taskInput" placeholder="Добавить задачу">
+            <button class="add_task" type="button" onclick="createTask()">Добавить</button>
+        </div>
+        <h3>Список задач</h3>
+        <div class="todo__list" id="notinList">
+        </div>
+        <button class="clearList" type="button" id="clearId" onclick="clearTodo()" disabled>Очистить</button>
+
+    </div>
+    <script>
+        // добавление задачи
+let todoList = [];
+if(localStorage.getItem('todo')!=undefined){
+  todoList = JSON.parse(localStorage.getItem('todo'));
+  showTodoList()
+};
+function createTask(){
+  let taskInput = document.getElementById('taskInput').value;
+  let taskTemp = {}; 
+  taskTemp.todo = taskInput;
+  taskTemp.check = false;
+  let i = todoList.length;
+  todoList[i] = taskTemp;
+  showTodoList();
+  localStorage.setItem('todo', JSON.stringify(todoList));
+
+  };
+
+function showTodoList(){
+  let showTodoList = '';
+  let clearBtn = document.getElementById('clearId');
+  for (let key in todoList){
+    if (todoList[key].check==true){
+      showTodoList+='<input type="checkbox" id="checkId" checked>';
+      
+    } else{
+      showTodoList+='<input type="checkbox" id="checkId">';
+    }
+    showTodoList+= todoList[key].todo + '<br>'
+  };
+  for (let value in todoList){
+    if(todoList[value].value!="" && showTodoList !=""){
+        clearBtn.removeAttribute('disabled');
+    } else{
+      clearBtn.setAttribute('disabled', "");
+    };
+  }
+  document.getElementById('notinList').innerHTML = showTodoList;
+  taskInput.value = "";
+  
+}
+//Удаление
+function clearTodo() {
+  localStorage.setItem("todo", JSON.stringify([]));
+  document.getElementById('notinList').innerHTML = "";
+  todoList.splice(0, todoList.length);
+  
+}
+
+    </script>   
+</body>
+</html>
+
+
+
